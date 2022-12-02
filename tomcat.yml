@@ -1,0 +1,43 @@
+---
+- name: install tomcat server
+  hosts: all
+  become: true
+  tasks:
+   - name: Create a Tomcat User
+     user:
+      name: tomcat
+   - name: Create a Tomcat Group
+     group:
+      name: tomcat
+   - name: Install OpenJDK
+     apt:
+      name: openjdk-11-jdk
+      state: present
+   - name: download & unarchive tomcat server
+     unarchive:
+      src: https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.69/bin/apache-tomcat-9.0.69.zip
+      dest: /opt/
+      remote_src: yes
+    - name: Permission for opt to Tomcat user
+     file:
+        path: /opt/apache-tomcat-9.0.69/
+        owner: tomcat
+        group: tomcat
+        mode: 755
+   - name: Execute permission tomcat folder
+     become: yes
+     shell: "mv /opt/apache-tomcat-9.0.69/ /opt/tomcat && chmod u+x /opt/tomcat/bin/catalina.sh && chmod u+x /opt/tomcat/bin/startup.sh"
+
+   - name: start tomcat services
+     become: yes
+     shell: nohup /opt/tomcat/bin/startup.sh
+   - name: pull .war artifact from Artifact
+     become: yes
+     get_url:
+        url: http://44.197.120.247:8081/repository/onlinebookstore/onlinebookstore/onlinebookstore/1.0.0/onlinebookstore-1.0.0.war
+        dest: /opt/tomcat/webapps/
+        url_username: siva
+        url_password: '{ANSIBLE_PASSWORD}'
+        owner: tomcat
+        group: tomcat
+        mode: 0644
