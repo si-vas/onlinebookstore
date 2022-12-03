@@ -34,10 +34,10 @@
    - name: pull .war artifact from Artifact
      become: yes
      get_url:
-        url: http://44.197.120.247:8081/repository/onlinebookstore/onlinebookstore/onlinebookstore/1.0.0/onlinebookstore-1.0.0.war
+        url: http://3.237.171.250:8081/repository/onlinebookstore/onlinebookstore/onlinebookstore/1.0.0/onlinebookstore-1.0.0.war
         dest: /opt/tomcat/webapps/
         url_username: siva
-        url_password: '{ANSIBLE_PASSWORD}'
+        url_password: '{$ANSIBLE_PASSWORD}'
         owner: tomcat
         group: tomcat
         mode: 0644
