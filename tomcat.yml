@@ -1,6 +1,6 @@
 ---
 - name: install tomcat server
-  hosts: localhost
+  hosts: all
   become: true
   tasks:
    - name: Create a Tomcat User
