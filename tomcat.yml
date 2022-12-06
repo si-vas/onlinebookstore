@@ -2,6 +2,9 @@
 - name: install tomcat server
   hosts: all
   become: true
+  vars:
+     - tomcat_URL: https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.70/bin/apache-tomcat-9.0.70.zip
+     - tomcat_Name: apache-tomcat-9.0.70
   vars_files:
      - Nexus_Vars
   tasks:
@@ -17,18 +20,18 @@
       state: present
    - name: download & unarchive tomcat server
      unarchive:
-      src: https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.69/bin/apache-tomcat-9.0.69.zip
+      src: "{{tomcat_URL}}"
       dest: /opt/
       remote_src: yes
    - name: Permission for opt to Tomcat user
      file:
-       path: /opt/apache-tomcat-9.0.69/
+       path: /opt/{{tomcat_Name}}/
        owner: tomcat
        group: tomcat
        mode: 0755
    - name: Execute permission tomcat folder
      become: yes
-     shell: "mv /opt/apache-tomcat-9.0.69/ /opt/tomcat && chmod u+x /opt/tomcat/bin/catalina.sh && chmod u+x /opt/tomcat/bin/startup.sh"
+     shell: "mv /opt/{{tomcat_Name}}/ /opt/tomcat && chmod u+x /opt/tomcat/bin/catalina.sh && chmod u+x /opt/tomcat/bin/startup.sh"
 
    - name: start tomcat services
      become: yes
@@ -36,7 +39,7 @@
    - name: pull .war artifact from Artifact
      become: yes
      get_url:
-       url: http://3.92.6.139:8081/repository/onlinebookstore/onlinebookstore/onlinebookstore/1.0.0/onlinebookstore-1.0.0.war
+       url: http://34.200.216.233:8081/repository/onlinebookstore/onlinebookstore/onlinebookstore/1.0.0/onlinebookstore-1.0.0.war
        dest: /opt/tomcat/webapps/
        url_username: siva
        url_password: "{{Nexus_Password}}"
