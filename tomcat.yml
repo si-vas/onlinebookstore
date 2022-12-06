@@ -2,6 +2,8 @@
 - name: install tomcat server
   hosts: all
   become: true
+  vars_files:
+     - Nexus_Vars
   tasks:
    - name: Create a Tomcat User
      user:
@@ -37,7 +39,7 @@
        url: http://3.92.6.139:8081/repository/onlinebookstore/onlinebookstore/onlinebookstore/1.0.0/onlinebookstore-1.0.0.war
        dest: /opt/tomcat/webapps/
        url_username: siva
-       url_password: $ANS_PASS
+       url_password: "{{Nexus_Password}}"
        owner: tomcat
        group: tomcat
        mode: 0644
